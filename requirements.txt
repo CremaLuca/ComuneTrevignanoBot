@@ -1,0 +1,3 @@
+env-file==0.0.0
+facebook_scraper==0.2.13
+tinydb==4.2.0

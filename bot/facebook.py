@@ -23,9 +23,6 @@ def get_new_posts():
 
     # Retrieve last 2 pages of posts
     facebook_posts = get_posts(page_name, pages=2)
-    if(len(facebook_posts) <= 0):
-        print("Couldn't retrieve any new post")
-        return list()
 
     for post in facebook_posts:
         # Check if it has already been posted

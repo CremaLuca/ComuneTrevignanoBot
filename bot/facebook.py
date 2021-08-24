@@ -20,7 +20,14 @@ def get_new_posts():
     '''
     new_posts = list()
     Post = Query()  # Database Post object
-    for post in get_posts(page_name, pages=2):
+
+    # Retrieve last 2 pages of posts
+    facebook_posts = get_posts(page_name, pages=2)
+    if(len(facebook_posts) <= 0):
+        print("Couldn't retrieve any new post")
+        return list()
+
+    for post in facebook_posts:
         # Check if it has already been posted
         if(len(db.search(Post.post_id == post['post_id'])) == 0):
             new_posts.append(post)
@@ -31,6 +38,10 @@ def get_new_posts():
 def message_new_posts():
     # Retrieve new posts
     new_posts = get_new_posts()
+
+    if(len(new_posts) <= 0):
+        print("There aren't any new posts")
+        return
     # Send messages
     for post in new_posts:
         # Preprocess message
@@ -41,7 +52,7 @@ def message_new_posts():
         # Send message
         if('images' in post):
             telegram.send_photos_url(post['text'], post['images'])
-        #elif('video' in post):
+        # elif('video' in post):
         #    pass
         elif('image' in post):
             telegram.send_photo_url(post['text'], post['image'])
@@ -61,6 +72,7 @@ def shorten_text(text):
     if(len(text) > MAX_TELEGRAM_MSG_LEN):
         text = text[:MAX_TELEGRAM_MSG_LEN] + "..."
     return text
+
 
 if __name__ == "__main__":
     print("Checking for new posts...")
